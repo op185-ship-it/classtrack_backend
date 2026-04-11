@@ -75,7 +75,7 @@ Most controllers are under:
 - `/api/sessions`
 - `/api/students`
 
-## Upload to GitHub
+<!-- ## Upload to GitHub
 
 1) Make sure you are **not committing secrets** (DB passwords, API keys). This repo is set up to read DB credentials via env vars (`DB_PASSWORD`, etc.).
 
@@ -93,7 +93,7 @@ git commit -m "Initial commit"
 git branch -M main
 git remote add origin <YOUR_GITHUB_REPO_URL>
 git push -u origin main
-```
+``` -->
 
 ## Notes
 
