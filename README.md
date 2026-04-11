@@ -42,6 +42,24 @@ docker compose up -d
 
 The app runs on port `8080` by default.
 
+## Troubleshooting
+
+### `FATAL: password authentication failed for user "postgres"`
+
+Your local PostgreSQL password does not match what the app is using.
+
+- Option A (recommended): set env vars before running:
+
+```bash
+export DB_PASSWORD="<your postgres password>"
+./mvnw spring-boot:run
+```
+
+- Option B: use a local-only Spring profile file:
+  1) Copy `src/main/resources/application-local.properties.example` to `src/main/resources/application-local.properties`
+  2) Put your real password in that local file
+  3) Run: `SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run`
+
 ## API docs (Swagger UI)
 
 After starting the app:
@@ -81,4 +99,3 @@ git push -u origin main
 
 - `spring.jpa.hibernate.ddl-auto=update` is enabled, so Hibernate will update tables automatically based on entities.
 - File uploads are configured with very large/unlimited multipart limits in `application.properties`.
-

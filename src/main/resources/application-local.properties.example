@@ -1,0 +1,17 @@
+# Local-only overrides (copy to application-local.properties)
+#
+# 1) Copy:
+#    cp src/main/resources/application-local.properties.example src/main/resources/application-local.properties
+# 2) Run with:
+#    SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
+#
+# NOTE: application-local.properties is gitignored.
+
+# Database connection
+spring.datasource.url=jdbc:postgresql://localhost:5432/class_track_db
+spring.datasource.username=postgres
+spring.datasource.password=YOUR_LOCAL_DB_PASSWORD
+
+# Optional: Flask service URL
+flask.service.url=http://localhost:5000
+

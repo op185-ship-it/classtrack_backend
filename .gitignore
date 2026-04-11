@@ -35,3 +35,6 @@ build/
 ### Local env files ###
 .env
 .env.*
+
+### Local Spring profile overrides ###
+src/main/resources/application-local.properties
