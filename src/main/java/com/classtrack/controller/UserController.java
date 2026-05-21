@@ -2,14 +2,12 @@ package com.classtrack.controller;
 
 import java.util.UUID;
 
+import com.classtrack.dto.response.AdminManagePageResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.classtrack.dto.UserResponseDto;
 import com.classtrack.dto.request.LoginRequestDto;
@@ -24,7 +22,7 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/login")
-	public ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto dto){
+	public ResponseEntity<?> loginUser(@RequestBody LoginRequestDto dto){
 		System.out.println(dto);
 		if(dto.getEmail().equals("admin@123") && dto.getPassword().equals("admin")) {
 			UserResponseDto dto1 = new UserResponseDto();
@@ -39,5 +37,10 @@ public class UserController {
 		}
 		
 	}
+    @GetMapping("admins/managements")
+    public ResponseEntity<?> getManagePageData(){
+        AdminManagePageResponseDto dto = userService.getManagePageData();
+        return  ResponseEntity.status(HttpStatus.OK).body(dto);
+    }
 
 }

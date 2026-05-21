@@ -1,23 +1,38 @@
 package com.classtrack.service;
 
+import com.classtrack.dto.ClassRoomResponseDto;
+import com.classtrack.dto.response.AdminManagePageResponseDto;
+import com.classtrack.dto.response.DepartmentResponseDto;
+import com.classtrack.entity.*;
+import com.classtrack.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.UserResponseDto;
 import com.classtrack.dto.request.LoginRequestDto;
-import com.classtrack.entity.Student;
-import com.classtrack.entity.Teacher;
-import com.classtrack.entity.User;
-import com.classtrack.repository.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
 
 	@Autowired
-	UserRepository repository;
+	UserRepository userRepository;
+    @Autowired
+    DepartmentRepository departmentRepository;
+    @Autowired
+    ClassRoomRepository classRoomRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    TeacherRepository teacherRepository;
+
+
+
 	
 	public UserResponseDto loginUser(LoginRequestDto dto) {
-		User user = repository
+		User user = userRepository
 				.findByEmailAndPassword(dto.getEmail(), dto.getPassword())
 				.orElseThrow(()->new RuntimeException("no user found"));
 		
@@ -32,4 +47,41 @@ public class UserService {
 		dto2.setUserId(user.getId());
 		return dto2;
 		}
+
+    public AdminManagePageResponseDto getManagePageData() {
+            long countOfDepartments = departmentRepository.count();
+            long countOfClassrooms = classRoomRepository.count();
+            long countOfStudents = studentRepository.count();
+            long countOfTeachers = teacherRepository.count();
+
+            List<DepartmentResponseDto> departmentsDto = new ArrayList<>();
+            List<ClassRoomResponseDto> classroomsDto = new ArrayList<>();
+
+            List<Department> departments = departmentRepository.findAll();
+            for(Department d : departments){
+                DepartmentResponseDto dto = new DepartmentResponseDto();
+                dto.setDepartmentName(d.getDepartmentName());
+                dto.setDepartmentCode(d.getDepartmentCode());
+                dto.setNoOfClasses(classRoomRepository.countByDepartment(d));
+                dto.setNoOfStudents(userRepository.countStudentsByDepartment(d));
+                dto.setNoOfTeachers(userRepository.countTeachersByDepartment(d));
+                dto.setNoOfClasses(classRoomRepository.countByDepartment(d));
+
+                departmentsDto.add(dto);
+            }
+
+            List<ClassRoom> classRooms = classRoomRepository.findAll();
+            for(ClassRoom c : classRooms){
+                ClassRoomResponseDto dto = new ClassRoomResponseDto();
+                dto.setSem(c.getSemester());
+                dto.setDepartmentName(c.getDepartment().getDepartmentCode());
+                dto.setClassRoomName(c.getClassRoomName());
+                dto.setNoOfStudents(studentRepository.countByClassRoom(c));
+                classroomsDto.add(dto);
+            }
+
+
+
+            return new AdminManagePageResponseDto(countOfDepartments,countOfClassrooms,countOfStudents,countOfTeachers,departmentsDto,classroomsDto);
+    }
 }

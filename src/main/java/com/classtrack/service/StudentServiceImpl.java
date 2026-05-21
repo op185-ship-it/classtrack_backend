@@ -7,14 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.classtrack.dto.response.*;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.StudentRequestDto;
-import com.classtrack.dto.response.AttendanceSummaryPerSubjectDto;
-import com.classtrack.dto.response.ScheduleResponseDto;
-import com.classtrack.dto.response.StudentHomePageResponseDto;
-import com.classtrack.dto.response.StudentResponseDto;
-import com.classtrack.dto.response.StudentSessionResponseDto;
 import com.classtrack.entity.Attendance;
 import com.classtrack.entity.ClassRoom;
 import com.classtrack.entity.Department;
@@ -201,5 +197,20 @@ public class StudentServiceImpl implements StudentService {
 		
 		return responseDto;
 	}
+
+    @Override
+    public BasicStudentDto getInfoForImageStore(UUID userID) {
+        Student student = studentRepository
+                                .findById(userID)
+                                    .orElseThrow(()-> new RuntimeException("no student found with the provided userID"));
+        BasicStudentDto dto = new BasicStudentDto();
+        dto.setName(student.getName());
+        dto.setUserId(student.getId());
+        dto.setRollNumber(student.getRollNumber());
+        dto.setDepartmentName(student.getDepartment().getDepartmentCode());
+        dto.setClassRoomName(student.getClassRoom().getClassRoomName());
+
+        return dto;
+    }
 
 }

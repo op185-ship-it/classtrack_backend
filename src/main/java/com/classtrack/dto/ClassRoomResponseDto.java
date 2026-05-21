@@ -8,6 +8,8 @@ import com.classtrack.entity.User;
 public class ClassRoomResponseDto {
 	private String classRoomName;
 	private String departmentName;
+    private Integer sem;
+    private Long noOfStudents;
 	private List<UserResponseDto> students = new ArrayList<>();
 	public String getClassRoomName() {
 		return classRoomName;
@@ -27,8 +29,24 @@ public class ClassRoomResponseDto {
 	public void setStudents(List<UserResponseDto> students) {
 		this.students = students;
 	}
-	
-	//helper
+
+    public Integer getSem() {
+        return sem;
+    }
+
+    public void setSem(Integer sem) {
+        this.sem = sem;
+    }
+
+    public Long getNoOfStudents() {
+        return noOfStudents;
+    }
+
+    public void setNoOfStudents(Long noOfStudents) {
+        this.noOfStudents = noOfStudents;
+    }
+
+    //helper
 	public void addStudent(UserResponseDto dto) {
 		students.add(dto);
 	}
