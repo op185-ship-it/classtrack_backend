@@ -13,17 +13,19 @@ public class AdminManagePageResponseDto {
     private Long noOfTeachers;
     List<DepartmentResponseDto> departments;
     List<ClassRoomResponseDto> classRooms;
+    List<SubjectResponseDto> subjects;
 
     public AdminManagePageResponseDto() {
     }
 
-    public AdminManagePageResponseDto(Long noOfDepartments, Long noOfClassrooms, Long noOfStudents, Long noOfTeachers, List<DepartmentResponseDto> departments, List<ClassRoomResponseDto> classRooms) {
+    public AdminManagePageResponseDto(Long noOfDepartments, Long noOfClassrooms, Long noOfStudents, Long noOfTeachers, List<DepartmentResponseDto> departments, List<ClassRoomResponseDto> classRooms, List<SubjectResponseDto> subjects) {
         this.noOfDepartments = noOfDepartments;
         this.noOfClassrooms = noOfClassrooms;
         this.noOfStudents = noOfStudents;
         this.noOfTeachers = noOfTeachers;
         this.departments = departments;
         this.classRooms = classRooms;
+        this.subjects = subjects;
     }
 
     public Long getNoOfDepartments() {
@@ -72,5 +74,13 @@ public class AdminManagePageResponseDto {
 
     public void setClassRooms(List<ClassRoomResponseDto> classRooms) {
         this.classRooms = classRooms;
+    }
+
+    public List<SubjectResponseDto> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SubjectResponseDto> subjects) {
+        this.subjects = subjects;
     }
 }

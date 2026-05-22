@@ -54,7 +54,7 @@ public class ClassRoomController {
 //		
 //	}
 	
-	@PostMapping("/schedules")
+	@PostMapping("/v1/schedules")
 	public ResponseEntity<List<ScheduleResponseDto>> createSchedule(@RequestBody ScheduleDto dto){
 		
 		List<ScheduleResponseDto> li = scheduleService.createSchehdule(dto);

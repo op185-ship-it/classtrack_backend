@@ -3,6 +3,7 @@ package com.classtrack.service;
 import com.classtrack.dto.ClassRoomResponseDto;
 import com.classtrack.dto.response.AdminManagePageResponseDto;
 import com.classtrack.dto.response.DepartmentResponseDto;
+import com.classtrack.dto.response.SubjectResponseDto;
 import com.classtrack.entity.*;
 import com.classtrack.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class UserService {
     StudentRepository studentRepository;
     @Autowired
     TeacherRepository teacherRepository;
+    @Autowired
+    SubjectRepository subjectRepository;
 
 
 
@@ -56,6 +59,7 @@ public class UserService {
 
             List<DepartmentResponseDto> departmentsDto = new ArrayList<>();
             List<ClassRoomResponseDto> classroomsDto = new ArrayList<>();
+        List<SubjectResponseDto> subjectsDto = new ArrayList<>();
 
             List<Department> departments = departmentRepository.findAll();
             for(Department d : departments){
@@ -80,8 +84,18 @@ public class UserService {
                 classroomsDto.add(dto);
             }
 
+            List<Subject> subjects = subjectRepository.findAll();
+
+             for(Subject s : subjects){
+            SubjectResponseDto dto = new SubjectResponseDto();
+            dto.setSubjectNameAndCode(s.getSubjectName()+"("+s.getSubjectCode()+")");
+            dto.setDepartmentNameAndCode(s.getDepartment().getDepartmentName()+"("+s.getDepartment().getDepartmentCode()+")");
+            dto.setSemester(s.getSemester());
+                 System.out.println(dto.getDepartmentNameAndCode());
+            subjectsDto.add(dto);
+        }
 
 
-            return new AdminManagePageResponseDto(countOfDepartments,countOfClassrooms,countOfStudents,countOfTeachers,departmentsDto,classroomsDto);
+            return new AdminManagePageResponseDto(countOfDepartments,countOfClassrooms,countOfStudents,countOfTeachers,departmentsDto,classroomsDto,subjectsDto);
     }
 }

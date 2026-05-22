@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.classtrack.dto.response.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.StudentRequestDto;
@@ -211,6 +212,17 @@ public class StudentServiceImpl implements StudentService {
         dto.setClassRoomName(student.getClassRoom().getClassRoomName());
 
         return dto;
+    }
+
+    @Override
+    public @Nullable List<StudentResponseDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentResponseDto> responseDtos = new ArrayList<>();
+        for(Student s: students){
+            StudentResponseDto dto = new StudentResponseDto(s.getName(),s.getEmail(),s.getClassRoom().getClassRoomName(),s.getDepartment().getDepartmentCode(),s.getClassRoom().getSemester());
+            responseDtos.add(dto);
+        }
+        return  responseDtos;
     }
 
 }

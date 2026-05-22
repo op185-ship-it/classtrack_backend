@@ -61,4 +61,9 @@ public class StudentController {
     public ResponseEntity<BasicStudentDto> getInfo(@PathVariable UUID userId){
         return ResponseEntity.status(HttpStatus.OK).body(studentService.getInfoForImageStore(userId));
     }
+
+    @GetMapping("/students")
+    public ResponseEntity<?> getAllStudents(){
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getAllStudents());
+    }
 }

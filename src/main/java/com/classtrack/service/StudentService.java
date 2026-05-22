@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.classtrack.dto.request.StudentRequestDto;
 import com.classtrack.dto.response.*;
+import org.jspecify.annotations.Nullable;
 
 public interface StudentService {
 	StudentResponseDto createStudent(StudentRequestDto dto);
@@ -16,4 +17,6 @@ public interface StudentService {
 	List<AttendanceSummaryPerSubjectDto> getSubjectWiseAttendanceByStudentId(UUID userId);
 
     BasicStudentDto getInfoForImageStore(UUID userID);
+
+    @Nullable List<StudentResponseDto> getAllStudents();
 }
