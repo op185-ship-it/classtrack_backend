@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.classtrack.dto.request.ScheduleRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,12 @@ public class ClassRoomController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(li);
 		
 	}
+
+    @PostMapping("/v2/schedules")
+    public ResponseEntity<?> createScheduleNew(@RequestBody ScheduleRequestDto scheduleRequestDto){
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.createSchehduleNew(scheduleRequestDto));
+    }
+
 	@GetMapping("/schedules/{userId}")
 	public ResponseEntity<List<ScheduleResponseDto>> getSchedules(@PathVariable UUID userId){
 		
@@ -71,5 +78,10 @@ public class ClassRoomController {
     public ResponseEntity<?> getAllSchedules(){
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAllSchedules());
     }
+    @GetMapping("/classrooms/{classRoomName}/students")
+    public ResponseEntity<?> findAllStudentsByClassRoomName(@PathVariable String classRoomName){
+        return ResponseEntity.status(HttpStatus.OK).body(classRoomService.findAllStudentsByClassRoomName(classRoomName));
+    }
+
 	
 }

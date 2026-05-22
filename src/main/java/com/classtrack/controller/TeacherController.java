@@ -9,6 +9,8 @@ import com.classtrack.dto.request.TeacherRequestDto;
 import com.classtrack.dto.response.TeacherResponseDto;
 import com.classtrack.service.TeacherService;
 
+import java.util.UUID;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
@@ -27,5 +29,10 @@ public class TeacherController {
     public ResponseEntity<?> getAllTeachers(){
 //        return teacherService.getAllTeachers();
         return  ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllTeachers());
+    }
+
+    @GetMapping("/teachers/{userId}/schedules")
+    public ResponseEntity<?>  getAllSchedules(@PathVariable UUID userId){
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllSchedules(userId));
     }
 }

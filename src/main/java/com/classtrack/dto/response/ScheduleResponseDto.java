@@ -4,7 +4,9 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ScheduleResponseDto {
-	
+
+    private long scheduleId;
+
 	private String subjectName;
 	private String subjectCode;
 	private String teacherName;
@@ -55,5 +57,13 @@ public class ScheduleResponseDto {
 
     public void setClassRoomName(String classRoomName) {
         this.classRoomName = classRoomName;
+    }
+
+    public long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(long scheduleId) {
+        this.scheduleId = scheduleId;
     }
 }

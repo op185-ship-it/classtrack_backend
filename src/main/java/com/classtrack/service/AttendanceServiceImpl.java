@@ -6,15 +6,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.classtrack.dto.response.*;
+import com.classtrack.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.AttendanceRequestDto;
-import com.classtrack.dto.response.AttendanceEntryDto;
-import com.classtrack.dto.response.AttendanceSummaryPerSubjectDto;
-import com.classtrack.dto.response.AttendanceSummaryWithStudentDto;
-import com.classtrack.dto.response.BasicStudentDto;
-import com.classtrack.dto.response.ClassStartedResponseDto;
-import com.classtrack.dto.response.TeacherAttendanceResponseDto;
 import com.classtrack.entity.AttendanceStatus;
 import com.classtrack.entity.Attendance;
 import com.classtrack.entity.ClassRoom;
@@ -24,18 +22,20 @@ import com.classtrack.entity.SessionStatus;
 import com.classtrack.entity.Student;
 import com.classtrack.entity.StudentSubjectAttendanceSummary;
 import com.classtrack.entity.Subject;
-import com.classtrack.repository.AttendanceRepository;
-import com.classtrack.repository.ClassRoomRepository;
-import com.classtrack.repository.LectureSessionRepository;
-import com.classtrack.repository.ScheduleRepository;
-import com.classtrack.repository.StudentSubjectAttendanceSummaryRepository;
-import com.classtrack.repository.SubjectRepository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
-	
+
+    @Autowired
+    StudentRepository studentRepository;
+
+    @Autowired
+    RestTemplate restTemplate;
+
 	LectureSessionRepository lectureSessionRepository;
 	ScheduleRepository scheduleRepository;
 	AttendanceRepository attendanceRepository;
@@ -177,13 +177,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 		return responseDto;
 	}
 
+    @Override
+    public void markAttendanceSummary(String classRoomName) {
 
-	@Override
-	public void markAttendanceSummary(String classRoomName) {
-		// 
-		
-		
-	}
+    }
 
-	
+
 }

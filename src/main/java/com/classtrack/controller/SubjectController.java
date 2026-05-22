@@ -29,5 +29,6 @@ public class SubjectController {
     public ResponseEntity<?> getAllSubjects(){
         return ResponseEntity.status(HttpStatus.OK).body(subjectService.getAllSubjects());
     }
+
 	
 }

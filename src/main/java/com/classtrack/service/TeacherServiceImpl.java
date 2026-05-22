@@ -1,5 +1,10 @@
 package com.classtrack.service;
 
+import com.classtrack.dto.response.ScheduleResponseDto;
+import com.classtrack.entity.Schedule;
+import com.classtrack.repository.ScheduleRepository;
+import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +19,14 @@ import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 public class TeacherServiceImpl implements TeacherService {
+
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
     private final TeacherRepository teacherRepository;
     private final DepartmentRepository departmentRepository;
@@ -60,5 +69,24 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         return responseDtos;
+    }
+
+    @Override
+    public @Nullable List<ScheduleResponseDto> getAllSchedules(UUID userId) {
+        List<Schedule> schedules = scheduleRepository.findAllByTeacher(teacherRepository.findById(userId).orElseThrow(()-> new RuntimeException("teacher not found")));
+        List<ScheduleResponseDto> responseDtos = new ArrayList<>();
+        for(Schedule s : schedules){
+            ScheduleResponseDto dto = new ScheduleResponseDto();
+            dto.setClassRoomName(s.getClassRoom().getClassRoomName());
+            dto.setTeacherName(s.getTeacher().getName());
+            dto.setSubjectName(s.getSubject().getSubjectName());
+            dto.setDayOfWeek(s.getDayOfWeek());
+            dto.setStartTime(s.getStartTime());
+            dto.setEndTime(s.getEndTime());
+            dto.setSubjectCode(s.getSubject().getSubjectCode());
+            dto.setScheduleId(s.getId());
+            responseDtos.add(dto);
+        }
+        return  responseDtos;
     }
 }

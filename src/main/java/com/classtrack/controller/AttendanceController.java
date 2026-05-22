@@ -1,5 +1,6 @@
 package com.classtrack.controller;
 
+import com.classtrack.dto.response.FlaskAttendanceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import com.classtrack.dto.response.TeacherAttendanceResponseDto;
 import com.classtrack.service.AttendanceService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/attendance")
 public class AttendanceController {
 
 	@Autowired
@@ -29,12 +30,13 @@ public class AttendanceController {
 		
 	}
 	
-	@PostMapping("/attendance")
+	@PostMapping("/teachers/attendance")
 	public ResponseEntity<TeacherAttendanceResponseDto> markAttendance(@RequestBody AttendanceRequestDto requestDto){
 		
 		TeacherAttendanceResponseDto dto = attendanceService.markAttendance(requestDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(dto);
 		
 	}
+
 	
 }

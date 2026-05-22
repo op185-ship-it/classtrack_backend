@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.classtrack.dto.request.ScheduleRequestDto;
 import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -153,6 +154,24 @@ public ScheduleServiceImpl(StudentRepository studentRepository, TeacherRepositor
             responseDtos.add(dto);
         }
         return  responseDtos;
+    }
+
+    @Override
+    public @Nullable String createSchehduleNew(ScheduleRequestDto scheduleRequestDto) {
+        Schedule schedule = new Schedule();
+
+        schedule.setClassRoom(classRoomRepository.findByClassRoomName(scheduleRequestDto.getClassRoomName()).orElseThrow(()-> new RuntimeException("ClassRoom not found")));
+
+        schedule.setSubject(subjectRepository.findBySubjectName(scheduleRequestDto.getSubjectName()).orElseThrow(()-> new RuntimeException("subject not found")));
+
+        schedule.setTeacher(teacherRepository.findByName(scheduleRequestDto.getTeacherName()).orElseThrow(()-> new RuntimeException("Teacher not found")));
+
+        schedule.setStartTime(scheduleRequestDto.getStartTime());
+        schedule.setEndTime(scheduleRequestDto.getEndTime());
+        schedule.setDayOfWeek(scheduleRequestDto.getDayOfWeek());
+
+        schedule= scheduleRepository.save(schedule);
+        return  "schedule created successfully";
     }
 
 }
