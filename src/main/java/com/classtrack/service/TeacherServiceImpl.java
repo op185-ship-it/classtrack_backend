@@ -1,5 +1,6 @@
 package com.classtrack.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.TeacherRequestDto;
@@ -10,6 +11,9 @@ import com.classtrack.repository.DepartmentRepository;
 import com.classtrack.repository.TeacherRepository;
 
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -44,5 +48,17 @@ public class TeacherServiceImpl implements TeacherService {
                 teacher.getEmail(),
                 department.getDepartmentName()
         );
+    }
+
+    @Override
+    public List<?> getAllTeachers() {
+        List<Teacher> teachers = teacherRepository.findAll();
+        List<TeacherResponseDto> responseDtos = new ArrayList<>();
+        for (Teacher t : teachers){
+            TeacherResponseDto dto = new TeacherResponseDto(t.getName(),t.getEmail(),t.getDepartment().getDepartmentName());
+            responseDtos.add(dto);
+        }
+
+        return responseDtos;
     }
 }
