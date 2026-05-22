@@ -67,5 +67,9 @@ public class ClassRoomController {
 		List<ScheduleResponseDto> li = scheduleService.getClassRoomScheduleForStudent(userId);
 		return ResponseEntity.status(HttpStatus.OK).body(li);
 	}
+    @GetMapping("/schedules")
+    public ResponseEntity<?> getAllSchedules(){
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAllSchedules());
+    }
 	
 }

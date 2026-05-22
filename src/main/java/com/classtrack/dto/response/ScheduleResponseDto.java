@@ -11,6 +11,7 @@ public class ScheduleResponseDto {
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private DayOfWeek dayOfWeek;
+    private String classRoomName;
 	public String getSubjectName() {
 		return subjectName;
 	}
@@ -47,6 +48,12 @@ public class ScheduleResponseDto {
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
 	}
-	
-	
+
+    public String getClassRoomName() {
+        return classRoomName;
+    }
+
+    public void setClassRoomName(String classRoomName) {
+        this.classRoomName = classRoomName;
+    }
 }
