@@ -107,10 +107,10 @@ public class StudentServiceImpl implements StudentService {
 		responseDto.setRollNumber(student.getRollNumber());
 		responseDto.setClassRoomName(student.getClassRoom().getClassRoomName());
 		
-		Long classesHeld = attendanceSummaryRepository.countClassesHeldByClassRoom(student.getClassRoom());
+		Long classesHeld = attendanceSummaryRepository.sumClassesHeldByStudent(student);
 		responseDto.setClassesHeld(classesHeld);
 		
-		long classesAttended = attendanceSummaryRepository.countClassesAttendedByStudent(student);
+		long classesAttended = attendanceSummaryRepository.sumClassesAttendedByStudent(student);
 		responseDto.setClassesAttended(classesAttended);
 		
 		DayOfWeek today= LocalDate.now().getDayOfWeek();

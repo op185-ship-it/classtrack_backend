@@ -22,6 +22,7 @@ import java.util.UUID;
  *
  * The teacher receives the Flask response (which mirrors the Spring Boot save result).
  */
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/sessions")
 public class AttendanceProcessController {

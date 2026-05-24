@@ -15,4 +15,12 @@ public interface TeacherService {
     List<?> getAllTeachers();
 
     @Nullable List<ScheduleResponseDto> getAllSchedules(UUID userId);
+
+    List<com.classtrack.dto.response.TeacherSessionDto> getPastSessions(UUID teacherId);
+
+    com.classtrack.dto.response.TeacherAttendanceResponseDto getSessionDetails(UUID sessionId);
+
+    List<com.classtrack.dto.response.TeacherReportDto> getClassWiseReports(UUID teacherId);
+
+    List<com.classtrack.dto.response.TeacherReportStudentDto> getReportDetails(Long scheduleId);
 }

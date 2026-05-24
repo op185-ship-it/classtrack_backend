@@ -3,13 +3,14 @@ package com.classtrack.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.classtrack.dto.response.*;
+import com.classtrack.dto.request.FlaskAttendanceMarkRequestDto;
 import com.classtrack.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.AttendanceRequestDto;
@@ -24,17 +25,10 @@ import com.classtrack.entity.StudentSubjectAttendanceSummary;
 import com.classtrack.entity.Subject;
 
 import jakarta.transaction.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
-
-    @Autowired
-    StudentRepository studentRepository;
-
-    @Autowired
-    RestTemplate restTemplate;
 
 	LectureSessionRepository lectureSessionRepository;
 	ScheduleRepository scheduleRepository;
@@ -87,10 +81,24 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	@Transactional
 	public TeacherAttendanceResponseDto markAttendance(AttendanceRequestDto requestDto) {
-		// find session->also check if it is active or not
+		if (requestDto == null || requestDto.getSessionId() == null) {
+			throw new RuntimeException("sessionId is required");
+		}
+
+		// find session
 		LectureSession lectureSession = lectureSessionRepository
-				.findBySessionStatusAndById(requestDto.getSessionId(),SessionStatus.STARTED)
-				.orElseThrow(()-> new RuntimeException("no session found"));
+				.findById(requestDto.getSessionId())
+				.orElseThrow(() -> new RuntimeException("no session found"));
+
+		// idempotency: if attendance already saved for this session, return existing result
+		if (attendanceRepository.countByLectureSession(lectureSession) > 0) {
+			return buildResponseFromExistingAttendance(lectureSession);
+		}
+
+		// only allow marking when session is STARTED
+		if (lectureSession.getSessionStatus() != SessionStatus.STARTED) {
+			throw new RuntimeException("session is not active");
+		}
 		
 		//find classroom
 		ClassRoom classRoom = lectureSession.getSchedule().getClassRoom();
@@ -98,8 +106,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 		//find all the students
 		List<Student>  students = classRoom.getStudents();
 		
-		//save the attendance map
-		Map<Integer, AttendanceStatus> hm = requestDto.getAttendanceReport();
+		// save the attendance map (null-safe)
+		Map<Integer, AttendanceStatus> hm = requestDto.getAttendanceReport() != null
+				? requestDto.getAttendanceReport() : Map.of();
 		
 		TeacherAttendanceResponseDto responseDto = new TeacherAttendanceResponseDto();
 		responseDto.setSessionId(lectureSession.getId());
@@ -175,6 +184,54 @@ public class AttendanceServiceImpl implements AttendanceService {
 			responseDto.setAttendanceResult(li);
 		
 		return responseDto;
+	}
+
+	private TeacherAttendanceResponseDto buildResponseFromExistingAttendance(LectureSession lectureSession) {
+		ClassRoom classRoom = lectureSession.getSchedule().getClassRoom();
+
+		TeacherAttendanceResponseDto responseDto = new TeacherAttendanceResponseDto();
+		responseDto.setSessionId(lectureSession.getId());
+		responseDto.setClasRoomName(classRoom.getClassRoomName());
+		responseDto.setDateOfLecture(lectureSession.getDateOfSession());
+		responseDto.setSubjectNameAndCode(
+				lectureSession.getSchedule().getSubject().getSubjectName() + "("
+						+ lectureSession.getSchedule().getSubject().getSubjectCode() + ")"
+		);
+
+		List<AttendanceEntryDto> li = new ArrayList<>();
+		List<Attendance> existing = attendanceRepository.findByLectureSession(lectureSession);
+		for (Attendance a : existing) {
+			AttendanceEntryDto dto = new AttendanceEntryDto();
+			dto.setStudentName(a.getStudent().getName());
+			dto.setRollNumber(a.getStudent().getRollNumber());
+			dto.setStatus(a.getAttendaceStatus());
+			li.add(dto);
+		}
+		responseDto.setAttendanceResult(li);
+		return responseDto;
+	}
+
+	@Override
+	@Transactional
+	public TeacherAttendanceResponseDto markAttendanceFromFlask(FlaskAttendanceMarkRequestDto requestDto) {
+		if (requestDto == null || requestDto.getSessionId() == null) {
+			throw new RuntimeException("sessionId is required");
+		}
+
+		Map<Integer, AttendanceStatus> hm = new HashMap<>();
+		if (requestDto.getPresentRollNumbers() != null) {
+			for (Integer roll : requestDto.getPresentRollNumbers()) {
+				if (roll != null) {
+					hm.put(roll, AttendanceStatus.PRESENT);
+				}
+			}
+		}
+
+		AttendanceRequestDto teacherRequest = new AttendanceRequestDto();
+		teacherRequest.setSessionId(requestDto.getSessionId());
+		teacherRequest.setAttendanceReport(hm);
+
+		return markAttendance(teacherRequest);
 	}
 
     @Override

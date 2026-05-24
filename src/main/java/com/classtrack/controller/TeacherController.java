@@ -7,9 +7,14 @@ import org.springframework.web.bind.annotation.*;
 
 import com.classtrack.dto.request.TeacherRequestDto;
 import com.classtrack.dto.response.TeacherResponseDto;
+import com.classtrack.dto.response.TeacherAttendanceResponseDto;
+import com.classtrack.dto.response.TeacherReportDto;
+import com.classtrack.dto.response.TeacherReportStudentDto;
+import com.classtrack.dto.response.TeacherSessionDto;
 import com.classtrack.service.TeacherService;
 
 import java.util.UUID;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -34,5 +39,25 @@ public class TeacherController {
     @GetMapping("/teachers/{userId}/schedules")
     public ResponseEntity<?>  getAllSchedules(@PathVariable UUID userId){
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.getAllSchedules(userId));
+    }
+
+    @GetMapping("/teachers/{teacherId}/sessions")
+    public ResponseEntity<List<TeacherSessionDto>> getPastSessions(@PathVariable UUID teacherId) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getPastSessions(teacherId));
+    }
+
+    @GetMapping("/teachers/sessions/{sessionId}")
+    public ResponseEntity<TeacherAttendanceResponseDto> getSessionDetails(@PathVariable UUID sessionId) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getSessionDetails(sessionId));
+    }
+
+    @GetMapping("/teachers/{teacherId}/reports")
+    public ResponseEntity<List<TeacherReportDto>> getClassWiseReports(@PathVariable UUID teacherId) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getClassWiseReports(teacherId));
+    }
+
+    @GetMapping("/teachers/reports/{scheduleId}")
+    public ResponseEntity<List<TeacherReportStudentDto>> getReportDetails(@PathVariable Long scheduleId) {
+        return ResponseEntity.status(HttpStatus.OK).body(teacherService.getReportDetails(scheduleId));
     }
 }
