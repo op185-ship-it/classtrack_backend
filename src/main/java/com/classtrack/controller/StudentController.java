@@ -3,6 +3,7 @@ package com.classtrack.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.classtrack.dto.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.classtrack.dto.request.StudentRequestDto;
-import com.classtrack.dto.response.AttendanceSummaryPerSubjectDto;
-import com.classtrack.dto.response.StudentHomePageResponseDto;
-import com.classtrack.dto.response.StudentResponseDto;
-import com.classtrack.dto.response.StudentSessionResponseDto;
 import com.classtrack.service.StudentService;
 @CrossOrigin("*")
 @RestController
@@ -59,4 +56,14 @@ public class StudentController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(li);
 	}
+
+    @GetMapping("/students/info-for-image-store/{userId}")
+    public ResponseEntity<BasicStudentDto> getInfo(@PathVariable UUID userId){
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getInfoForImageStore(userId));
+    }
+
+    @GetMapping("/students")
+    public ResponseEntity<?> getAllStudents(){
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getAllStudents());
+    }
 }

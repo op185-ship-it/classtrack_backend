@@ -7,14 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.classtrack.dto.response.*;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.request.StudentRequestDto;
-import com.classtrack.dto.response.AttendanceSummaryPerSubjectDto;
-import com.classtrack.dto.response.ScheduleResponseDto;
-import com.classtrack.dto.response.StudentHomePageResponseDto;
-import com.classtrack.dto.response.StudentResponseDto;
-import com.classtrack.dto.response.StudentSessionResponseDto;
 import com.classtrack.entity.Attendance;
 import com.classtrack.entity.ClassRoom;
 import com.classtrack.entity.Department;
@@ -110,10 +107,10 @@ public class StudentServiceImpl implements StudentService {
 		responseDto.setRollNumber(student.getRollNumber());
 		responseDto.setClassRoomName(student.getClassRoom().getClassRoomName());
 		
-		Long classesHeld = attendanceSummaryRepository.countClassesHeldByClassRoom(student.getClassRoom());
+		Long classesHeld = attendanceSummaryRepository.sumClassesHeldByStudent(student);
 		responseDto.setClassesHeld(classesHeld);
 		
-		long classesAttended = attendanceSummaryRepository.countClassesAttendedByStudent(student);
+		long classesAttended = attendanceSummaryRepository.sumClassesAttendedByStudent(student);
 		responseDto.setClassesAttended(classesAttended);
 		
 		DayOfWeek today= LocalDate.now().getDayOfWeek();
@@ -201,5 +198,31 @@ public class StudentServiceImpl implements StudentService {
 		
 		return responseDto;
 	}
+
+    @Override
+    public BasicStudentDto getInfoForImageStore(UUID userID) {
+        Student student = studentRepository
+                                .findById(userID)
+                                    .orElseThrow(()-> new RuntimeException("no student found with the provided userID"));
+        BasicStudentDto dto = new BasicStudentDto();
+        dto.setName(student.getName());
+        dto.setUserId(student.getId());
+        dto.setRollNumber(student.getRollNumber());
+        dto.setDepartmentName(student.getDepartment().getDepartmentCode());
+        dto.setClassRoomName(student.getClassRoom().getClassRoomName());
+
+        return dto;
+    }
+
+    @Override
+    public @Nullable List<StudentResponseDto> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        List<StudentResponseDto> responseDtos = new ArrayList<>();
+        for(Student s: students){
+            StudentResponseDto dto = new StudentResponseDto(s.getName(),s.getEmail(),s.getClassRoom().getClassRoomName(),s.getDepartment().getDepartmentCode(),s.getClassRoom().getSemester());
+            responseDtos.add(dto);
+        }
+        return  responseDtos;
+    }
 
 }

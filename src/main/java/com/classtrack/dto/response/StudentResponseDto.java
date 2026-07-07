@@ -1,5 +1,7 @@
 package com.classtrack.dto.response;
 
+import java.util.UUID;
+
 public class StudentResponseDto {
 
 	private String name;
@@ -7,6 +9,8 @@ public class StudentResponseDto {
 	private String enrolledClass;
 	private String Department;
 	private Integer semester;
+    private  Integer rollNumber;
+    private UUID userId;
 	
 	
 	public StudentResponseDto(String name, String email, String enrolledClass, String department, Integer semester) {
@@ -17,7 +21,11 @@ public class StudentResponseDto {
 		Department = department;
 		this.semester = semester;
 	}
-	public String getName() {
+
+    public StudentResponseDto() {
+    }
+
+    public String getName() {
 		return name;
 	}
 	public void setName(String name) {
@@ -47,6 +55,20 @@ public class StudentResponseDto {
 	public void setSemester(Integer semester) {
 		this.semester = semester;
 	}
-	
-	
+
+    public Integer getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(Integer rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
 }

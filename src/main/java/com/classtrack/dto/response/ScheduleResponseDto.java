@@ -4,13 +4,16 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 public class ScheduleResponseDto {
-	
+
+    private long scheduleId;
+
 	private String subjectName;
 	private String subjectCode;
 	private String teacherName;
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private DayOfWeek dayOfWeek;
+    private String classRoomName;
 	public String getSubjectName() {
 		return subjectName;
 	}
@@ -47,6 +50,20 @@ public class ScheduleResponseDto {
 	public void setSubjectCode(String subjectCode) {
 		this.subjectCode = subjectCode;
 	}
-	
-	
+
+    public String getClassRoomName() {
+        return classRoomName;
+    }
+
+    public void setClassRoomName(String classRoomName) {
+        this.classRoomName = classRoomName;
+    }
+
+    public long getScheduleId() {
+        return scheduleId;
+    }
+
+    public void setScheduleId(long scheduleId) {
+        this.scheduleId = scheduleId;
+    }
 }

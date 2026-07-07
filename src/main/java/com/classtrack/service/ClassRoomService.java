@@ -8,12 +8,16 @@ import com.classtrack.dto.ClassRoomCreateDto;
 import com.classtrack.dto.ClassRoomEnrollDto;
 import com.classtrack.dto.ClassRoomResponseDto;
 import com.classtrack.dto.response.ScheduleResponseDto;
+import com.classtrack.dto.response.StudentResponseDto;
 import com.classtrack.entity.ClassRoom;
+import org.jspecify.annotations.Nullable;
 
 public interface ClassRoomService {
 
 	Map<String, String> createClassRoom(ClassRoomCreateDto dto);
-	
+
+    @Nullable List<StudentResponseDto> findAllStudentsByClassRoomName(String classRoomName);
+
 //	ClassRoomResponseDto enrollClass(String classRoomName,ClassRoomEnrollDto dto);
 	
 	

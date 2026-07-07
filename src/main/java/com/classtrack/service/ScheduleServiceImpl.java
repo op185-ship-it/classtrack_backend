@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.classtrack.dto.request.ScheduleRequestDto;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.ScheduleDto;
@@ -133,5 +135,43 @@ public ScheduleServiceImpl(StudentRepository studentRepository, TeacherRepositor
 		
 		return li;
 	}
+
+    @Override
+    public @Nullable List<ScheduleResponseDto> getAllSchedules() {
+        List<Schedule> schedules = scheduleRepository.findAll();
+        List<ScheduleResponseDto> responseDtos = new ArrayList<>();
+
+        for(Schedule s : schedules){
+            ScheduleResponseDto dto = new ScheduleResponseDto();
+            dto.setSubjectName(s.getSubject().getSubjectName());
+            dto.setSubjectCode(s.getSubject().getSubjectCode());
+            dto.setTeacherName(s.getTeacher().getName());
+            dto.setDayOfWeek(s.getDayOfWeek());
+            dto.setStartTime(s.getStartTime());
+            dto.setEndTime(s.getEndTime());
+            dto.setClassRoomName(s.getClassRoom().getClassRoomName());
+            System.out.println(s.getClassRoom().getClassRoomName());
+            responseDtos.add(dto);
+        }
+        return  responseDtos;
+    }
+
+    @Override
+    public @Nullable String createSchehduleNew(ScheduleRequestDto scheduleRequestDto) {
+        Schedule schedule = new Schedule();
+
+        schedule.setClassRoom(classRoomRepository.findByClassRoomName(scheduleRequestDto.getClassRoomName()).orElseThrow(()-> new RuntimeException("ClassRoom not found")));
+
+        schedule.setSubject(subjectRepository.findBySubjectName(scheduleRequestDto.getSubjectName()).orElseThrow(()-> new RuntimeException("subject not found")));
+
+        schedule.setTeacher(teacherRepository.findByName(scheduleRequestDto.getTeacherName()).orElseThrow(()-> new RuntimeException("Teacher not found")));
+
+        schedule.setStartTime(scheduleRequestDto.getStartTime());
+        schedule.setEndTime(scheduleRequestDto.getEndTime());
+        schedule.setDayOfWeek(scheduleRequestDto.getDayOfWeek());
+
+        schedule= scheduleRepository.save(schedule);
+        return  "schedule created successfully";
+    }
 
 }

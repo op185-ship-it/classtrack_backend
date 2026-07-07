@@ -1,10 +1,9 @@
 package com.classtrack.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import com.classtrack.dto.response.StudentResponseDto;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.ClassRoomCreateDto;
@@ -68,10 +67,24 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 		return hm;
 	}
 
-
-
-
-
+    @Override
+    public @Nullable List<StudentResponseDto> findAllStudentsByClassRoomName(String classRoomName) {
+        ClassRoom classRoom = classRoomRepository.findByClassRoomName(classRoomName).orElseThrow(()-> new RuntimeException("no classroom found with that name"));
+        List<Student> students = studentRepository.findByClassRoom(classRoom);
+        List<StudentResponseDto> responseDtos = new ArrayList<>();
+        for(Student s : students){
+           StudentResponseDto dto = new StudentResponseDto();
+           dto.setName(s.getName());
+           dto.setUserId(s.getId());
+           dto.setRollNumber(s.getRollNumber());
+           dto.setEnrolledClass(s.getClassRoom().getClassRoomName());
+           dto.setDepartment(s.getDepartment().getDepartmentCode());
+           dto.setEmail(s.getEmail());
+           dto.setSemester(s.getClassRoom().getSemester());
+           responseDtos.add(dto);
+        }
+        return  responseDtos;
+    }
 
 
 //	@Override

@@ -1,8 +1,12 @@
 package com.classtrack.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.classtrack.dto.response.SubjectResponseDto;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import com.classtrack.dto.SubjectDto;
@@ -51,5 +55,19 @@ public class SubjectServiceImpl implements SubjectService {
 		
 		return dtoHm;
 	}
+
+    @Override
+    public @Nullable List<SubjectResponseDto> getAllSubjects() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<SubjectResponseDto> responseDtos = new ArrayList<>();
+        for(Subject s : subjects){
+            SubjectResponseDto dto = new SubjectResponseDto();
+            dto.setSubjectNameAndCode(s.getSubjectName()+"("+s.getSubjectCode()+")");
+            dto.setDepartmentNameAndCode(s.getDepartment().getDepartmentName()+"("+s.getDepartment().getDepartmentCode()+")");
+            dto.setSemester(s.getSemester());
+            responseDtos.add(dto);
+        }
+        return responseDtos;
+    }
 
 }

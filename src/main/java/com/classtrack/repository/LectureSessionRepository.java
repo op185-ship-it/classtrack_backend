@@ -28,6 +28,15 @@ public interface LectureSessionRepository extends JpaRepository<LectureSession, 
 			);
 	
 	Long countLectureSessionByClassRoom(ClassRoom classRoom);
+
+	@Query("""
+			SELECT ls FROM LectureSession ls
+			WHERE ls.schedule.teacher.id = :teacherId
+			ORDER BY ls.dateOfSession DESC
+			""")
+	List<LectureSession> findAllByTeacherIdOrderByDateDesc(@Param("teacherId") UUID teacherId);
+
+	long countByScheduleId(Long scheduleId);
 	
 	
 	
